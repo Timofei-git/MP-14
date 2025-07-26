@@ -1,32 +1,26 @@
-name: Java CI with Gradle  # Название вашего workflow
+name: Java CI with Gradle
 
-on:  # Определяет, когда будет запускаться workflow
+on:
   push:
-    branches: [ main, feature/* ]  # При push в ветку main или любую feature-ветку
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]  # При создании PR в main
+    branches: [ "main" ]
 
-jobs:  # Задачи, которые будут выполняться
-  build:  # Название задачи
-    runs-on: ubuntu-latest  # На какой ОС будет выполняться (исправил alpine на ubuntu)
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    steps:  # Шаги выполнения
-      - uses: actions/checkout@v3  # Клонирование репозитория
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Set up JDK 21  # Установка Java 21
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: 'temurin'
+          java-version: '21'
 
-      - name: Prepare  # Подготовка Предоставление прав на выполнение
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build without tests  # Сборка проекта без тестов
-        run: ./gradlew clean build -x test
-
-      - name: Run tests  # Запуск тестов
-        run: ./gradlew test
-
-      - name: Clean and build  # Очистка и полная сборка проекта
-        run: ./gradlew clean build
+      - name: Build with Gradle
+        run: ./gradlew build
